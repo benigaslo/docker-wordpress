@@ -1,10 +1,11 @@
 version: "3.8"
     
 services:
-  db:
+  wpdb:
     image: mysql:5.7
+    container_name: wpdb_$USER
     volumes:
-      - ./db_data:/var/lib/mysql
+      - wpdbdata:/var/lib/mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: somewordpress
@@ -14,10 +15,11 @@ services:
     
   wordpress:
     depends_on:
-      - db
+      - wpdb
     image: wordpress:latest
+    container_name: wordpress_$USER
     volumes:
-      - ./wp_data/:/var/www/html
+      - wpdata:/var/www/html
     ports:
       - "8000:80"
     restart: always
@@ -26,3 +28,8 @@ services:
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
+volumes:
+  wpdbdata:
+    name: wpdbdata_$USER
+  wpdata:
+    name: wpdata_$USER
